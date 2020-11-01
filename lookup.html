@@ -1,0 +1,58 @@
+<html>
+<head>
+   <meta charset="UTF-8">
+   <title>Texas Mail-In Ballot Check</title>
+</head>
+<body>
+
+<script src="mail-in.js"></script>
+
+Enter voter's name: <input id="input" type="text" style="width:400px">
+<div id="output">
+  <i>Javascript must be enabled to use this form</i>
+</div>
+
+<script>
+window.onload = () => {
+  const input = document.getElementById('input');
+  const output = document.getElementById('output');
+
+  function updateList() {
+
+    if (input.value.length < 4) {
+      output.innerHTML = '<i>Please enter at least four characters<i>';
+      return;
+    }
+
+    const search = input.value.toUpperCase().split(/[^A-Z]/);
+    let results = [];
+    voters.forEach(voter => {
+      if (results.length > 1000) {
+        return;
+      }
+      for (let i = 0; i < search.length; i++) {
+        if (!voter[0].includes(search[i]))
+          return;
+      }
+      results.push(voter);
+    });
+    let table = "<table border='1'><tr><th>Name</th><th>Date Received</th>"+
+    "<th>County</th><th>Precinct</th></tr>";
+    results.forEach(voter => {
+      table += `<tr><td>${voter[0]}</td><td>October ${voter[1]}</td>`+
+        `<td>${county[voter[3]]}</td><td>${voter[2]}</td></tr>`;
+    });
+    table += "</table>";
+    if (results.length >= 1000) {
+      table += "<i>Table truncated after 1000 results</i>";
+    } else {
+      table += `<i>${results.length} results</i>`;
+    }
+    output.innerHTML = table;
+  }
+
+  input.addEventListener("keyup",updateList);
+  updateList();
+}
+</script>
+</body>
